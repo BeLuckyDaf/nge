@@ -7,15 +7,17 @@
 class Game
 {
 private:
-	std::vector<Entity*>* entities;
-	static Game* instance;
+	std::vector<Entity*>* m_entities;
+	sf::Window* m_window;
+	static Game* m_instance;
 
 public:
-	Game();
-	static Game* Instance();
+	Game(sf::Window* window);
+	static Game* instance();
 
-	void AddEntity(Entity* entity);
-	void RemoveEntity(Entity* entity);
-	const std::vector<Entity*>* GetEntities();
+	void addEntity(Entity *entity);
+	void removeEntity(Entity *entity);
+	const std::vector<Entity*>* getEntities();
+	sf::Window* getWindow();
 };
 

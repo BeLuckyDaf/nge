@@ -7,20 +7,20 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(800, 600), "SFML works!");
 	window.setVerticalSyncEnabled(true);
 
-	Game game;
+	Game game(&window);
 	//Circle circle1(0.f, 25.f, 15.f);
 	//Circle circle2(0.f, 300.f, 100.f);
-	Circle circle3(0.f, 600.f, 50.f);
+	Circle circle3(0.f, 300.f, 50.f);
 
-	//game.AddEntity(&circle1);
-	//game.AddEntity(&circle2);
-	game.AddEntity(&circle3);
+	//game.addEntity(&circle1);
+	//game.addEntity(&circle2);
+    game.addEntity(&circle3);
 
 	int w, s, d, a, e, q;
 	w = s = d = a = e = q = 0;
 
-	for (auto entity : *game.GetEntities()) {
-		entity->Init();
+	for (auto entity : *game.getEntities()) {
+        entity->init();
 	}
 
 	sf::Clock deltaClock;
@@ -56,14 +56,14 @@ int main()
 			}
 		}
 
-		for (auto entity : *game.GetEntities()) {
-			entity->Update(dt);
+		for (auto entity : *game.getEntities()) {
+            entity->update(dt);
 		}
 
 		window.clear();
 
-		for (auto entity : *game.GetEntities()) {
-			auto drawables = entity->Draw();
+		for (auto entity : *game.getEntities()) {
+			auto drawables = entity->draw();
 			for (auto drawable : drawables) {
 				window.draw(*drawable);
 			}

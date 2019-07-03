@@ -5,26 +5,26 @@ Entity::Entity()
 {
 }
 
-void Entity::Init()
+void Entity::init()
 {
-	Game* game = Game::Instance();
+	Game* game = Game::instance();
 	if (game != nullptr) {
-		game->AddEntity(this);
+        game->addEntity(this);
 	}
 	else {
 		std::printf("Could not add entity. No game found.\n");
 	}
 }
 
-void Entity::Update(sf::Time& dt)
+void Entity::update(sf::Time &dt)
 {
 }
 
-std::vector<sf::Drawable*> Entity::Draw()
+std::vector<sf::Drawable*> Entity::draw()
 {
 	return std::vector<sf::Drawable*>();
 }
 
-void Entity::Destroyed()
+void Entity::destroyed()
 {
 }

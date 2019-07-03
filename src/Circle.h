@@ -7,11 +7,15 @@ class Circle :
 {
 public:
 	Circle(float x, float y, float radius);
-	sf::CircleShape* shape;
-	float x, y;
 
-	void Init();
-	void Update(sf::Time& dt);
-	std::vector<sf::Drawable*> Draw();
+	void init();
+	void update(sf::Time &dt);
+	std::vector<sf::Drawable*> draw();
+
+private:
+    sf::CircleShape* m_shape;
+    sf::Texture* m_texture;
+    sf::Sprite* m_sprite;
+    float m_x, m_y;
 };
 
