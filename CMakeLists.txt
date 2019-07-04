@@ -11,6 +11,6 @@ project(${PROJECT_NAME})
 ## In most cases better set in the CMake cache
 set(SFML_DIR "SFML-2.5.1/lib/cmake/SFML")
 
-find_package(SFML 2.5 COMPONENTS main graphics audio REQUIRED)
-add_executable(NGE WIN32 src/Entity.cpp src/Circle.cpp src/Game.cpp src/SfmlGame.cpp)
-target_link_libraries(NGE sfml-main sfml-graphics sfml-audio)
+find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
+add_executable(NGE WIN32 src/Entity.cpp src/Crosshair.cpp src/Game.cpp src/SfmlGame.cpp)
+target_link_libraries(NGE sfml-graphics sfml-audio)

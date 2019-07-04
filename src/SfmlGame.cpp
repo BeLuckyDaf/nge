@@ -1,76 +1,95 @@
 #include <SFML/Graphics.hpp>
+#include <sstream>
+
 #include "Game.h"
-#include "Circle.h"
+#include "Crosshair.h"
 
-int main()
-{
-	sf::RenderWindow window(sf::VideoMode(800, 600), "SFML works!");
-	window.setVerticalSyncEnabled(true);
+using namespace nge;
 
-	Game game(&window);
-	//Circle circle1(0.f, 25.f, 15.f);
-	//Circle circle2(0.f, 300.f, 100.f);
-	Circle circle3(0.f, 300.f, 50.f);
+int main() {
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Norfoe Game Engine");
+    sf::Clock deltaClock;
 
-	//game.addEntity(&circle1);
-	//game.addEntity(&circle2);
-    game.addEntity(&circle3);
+    //window.setFramerateLimit(30);
+    //window.setVerticalSyncEnabled(true);
 
-	int w, s, d, a, e, q;
-	w = s = d = a = e = q = 0;
+    Game game(&window);
+    Crosshair crosshair("Assets/crosshair.png");
 
-	for (auto entity : *game.getEntities()) {
+    sf::Font *font = new sf::Font;
+    font->loadFromFile("Assets/Ubuntu-R.ttf");
+    sf::Text text("", *font);
+    text.setFillColor(sf::Color::White);
+
+    /* ==== INIT ==== */
+
+    // Call init for each entity
+    for (auto entity : *game.getEntities()) {
         entity->init();
-	}
+    }
 
-	sf::Clock deltaClock;
+    int fpsCounter = 0;
+    float deltaFpsSeconds = 0;
+    float fps = 1;
 
-	while (window.isOpen())
-	{
-		sf::Time dt = deltaClock.restart();
+    while (window.isOpen()) {
+        sf::Time dt = deltaClock.restart();
 
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				window.close();
-			if (event.type == sf::Event::KeyPressed) {
-				if (event.key.code == sf::Keyboard::W) w = 1;
-				if (event.key.code == sf::Keyboard::S) s = 1;
-				if (event.key.code == sf::Keyboard::D) d = 1;
-				if (event.key.code == sf::Keyboard::A) a = 1;
+        // Showing framerate
+        if (fpsCounter < fps/10) {
+            fpsCounter++;
+            deltaFpsSeconds += dt.asSeconds();
+        }
+        else {
+            std::ostringstream oss;
+            fps = (fpsCounter)/deltaFpsSeconds;
+            oss << "FPS: " << fps;
+            text.setString(oss.str());
+            fpsCounter = 0;
+            deltaFpsSeconds = 0;
+        }
 
-				if (event.key.code == sf::Keyboard::E) e = 1;
-				if (event.key.code == sf::Keyboard::Q) q = 1;
+        /* ==== EVENTS AND INPUT ==== */
 
-				if (event.key.code == sf::Keyboard::Escape) window.close();
-			}
-			if (event.type == sf::Event::KeyReleased) {
-				if (event.key.code == sf::Keyboard::W) w = 0;
-				if (event.key.code == sf::Keyboard::S) s = 0;
-				if (event.key.code == sf::Keyboard::D) d = 0;
-				if (event.key.code == sf::Keyboard::A) a = 0;
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed)
+                window.close();
+            if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::Escape) window.close();
+            }
+        }
 
-				if (event.key.code == sf::Keyboard::E) e = 0;
-				if (event.key.code == sf::Keyboard::Q) q = 0;
-			}
-		}
+        /* ==== UPDATE ==== */
 
-		for (auto entity : *game.getEntities()) {
+        // Call update for each entity
+        for (auto entity : *game.getEntities()) {
             entity->update(dt);
-		}
+        }
 
-		window.clear();
+        window.clear();
 
-		for (auto entity : *game.getEntities()) {
-			auto drawables = entity->draw();
-			for (auto drawable : drawables) {
-				window.draw(*drawable);
-			}
-		}
+        /* ==== DRAWING ==== */
 
-		window.display();
-	}
+        // Call draw for each entity
+        for (auto entity : *game.getEntities()) {
+            auto drawables = entity->draw();
+            for (auto drawable : drawables) {
+                window.draw(*drawable);
+            }
+        }
 
-	return 0;
+        window.draw(text);
+
+        window.display();
+    }
+
+    /* ==== DESTROYING ==== */
+
+    // Call destroyed for each entity
+    for (auto entity : *game.getEntities()) {
+        entity->destroyed();
+    }
+
+    return 0;
 }

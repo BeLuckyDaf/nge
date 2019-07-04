@@ -4,20 +4,28 @@
 
 #include "Entity.h"
 
-class Game
-{
-private:
-	std::vector<Entity*>* m_entities;
-	sf::Window* m_window;
-	static Game* m_instance;
+namespace nge {
 
-public:
-	Game(sf::Window* window);
-	static Game* instance();
+    class Game {
+    private:
+        std::vector<Entity *> *m_entities;
+        sf::Window *m_window;
+        static Game *m_instance;
 
-	void addEntity(Entity *entity);
-	void removeEntity(Entity *entity);
-	const std::vector<Entity*>* getEntities();
-	sf::Window* getWindow();
-};
+    public:
+        explicit Game(sf::Window *window = nullptr);
 
+        static Game *instance();
+
+        void addEntity(Entity *entity);
+
+        void removeEntity(Entity *entity);
+
+        const std::vector<Entity *> *getEntities() const;
+
+        sf::Window *getWindow() const;
+
+        void setWindow(sf::Window* window);
+    };
+
+}

@@ -1,50 +1,45 @@
 #include "Game.h"
 
-Game* Game::m_instance;
+namespace nge {
 
-Game::Game(sf::Window* window)
-{
-    if (window == nullptr)
-    {
-        std::printf("Window cannot be null.\n");
+    Game *Game::m_instance;
+
+    Game::Game(sf::Window *window) {
+        m_instance = nullptr;
+        m_entities = nullptr;
+        m_window = window;
+
+        if (!m_instance) {
+            m_instance = this;
+            m_entities = new std::vector<Entity *>();
+        } else {
+            std::printf("Could not change game m_instance. instance already exists.\n");
+        }
     }
 
-	m_instance = nullptr;
-	m_entities = nullptr;
-	m_window = window;
+    Game *Game::instance() {
+        if (m_instance) return m_instance;
+        else return nullptr;
+    }
 
-	if (!m_instance)
-	{
-		m_instance = this;
-		m_entities = new std::vector<Entity*>();
-	}
-	else 
-	{
-		std::printf("Could not change game m_instance. instance already exists.\n");
-	}
-}
+    void Game::addEntity(Entity *entity) {
+        m_entities->push_back(entity);
+    }
 
-Game* Game::instance()
-{
-	if (m_instance) return m_instance;
-	else return nullptr;
-}
+    void Game::removeEntity(Entity *entity) {
 
-void Game::addEntity(Entity *entity)
-{
-	m_entities->push_back(entity);
-}
+    }
 
-void Game::removeEntity(Entity *entity)
-{
-	
-}
+    const std::vector<Entity *> *Game::getEntities() const {
+        return m_entities;
+    }
 
-const std::vector<Entity*>* Game::getEntities()
-{
-	return m_entities;
-}
+    sf::Window *Game::getWindow() const {
+        return m_window;
+    }
 
-sf::Window *Game::getWindow() {
-    return m_window;
+    void Game::setWindow(sf::Window* window) {
+        m_window = window;
+    }
+
 }
