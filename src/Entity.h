@@ -14,7 +14,7 @@ namespace nge {
 
         virtual void update(sf::Time &dt);
 
-        virtual std::vector<sf::Drawable *> draw();
+        virtual std::vector<sf::Drawable *> draw() = 0;
 
         virtual void destroyed();
     };

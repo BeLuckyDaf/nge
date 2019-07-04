@@ -13,14 +13,9 @@ namespace nge {
     }
 
     void Entity::init() {
-        printf("called\n");
     }
 
     void Entity::update(sf::Time &dt) {
-    }
-
-    std::vector<sf::Drawable *> Entity::draw() {
-        return std::vector<sf::Drawable *>();
     }
 
     void Entity::destroyed() {
