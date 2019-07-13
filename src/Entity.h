@@ -9,6 +9,7 @@ namespace nge {
     class Entity {
     public:
         Entity();
+        ~Entity();
 
         virtual void init();
 

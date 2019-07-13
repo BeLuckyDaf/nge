@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 
 #include "Entity.h"
 
@@ -8,12 +9,12 @@ namespace nge {
 
     class Game {
     private:
-        std::vector<Entity *> *m_entities;
-        sf::Window *m_window;
+        std::shared_ptr<std::vector<Entity*>> m_entities;
+        std::shared_ptr<sf::RenderWindow> m_window;
         static Game *m_instance;
 
     public:
-        explicit Game(sf::Window *window = nullptr);
+        explicit Game(std::shared_ptr<sf::RenderWindow> window = nullptr);
 
         static Game *instance();
 
@@ -21,11 +22,11 @@ namespace nge {
 
         void removeEntity(Entity *entity);
 
-        const std::vector<Entity *> *getEntities() const;
+        std::shared_ptr<std::vector<Entity*>> getEntities() const;
 
-        sf::Window *getWindow() const;
+        std::shared_ptr<sf::RenderWindow> getWindow() const;
 
-        void setWindow(sf::Window* window);
+        void setWindow(std::shared_ptr<sf::RenderWindow> window);
     };
 
 }

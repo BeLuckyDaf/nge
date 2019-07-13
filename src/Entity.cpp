@@ -12,6 +12,15 @@ namespace nge {
         }
     }
 
+    Entity::~Entity() {
+        Game *game = Game::instance();
+        if (game != nullptr) {
+            game->removeEntity(this);
+        } else {
+            std::fprintf(stderr, "Could not remove entity. No game found.\n");
+        }
+    }
+
     void Entity::init() {
     }
 
@@ -19,12 +28,6 @@ namespace nge {
     }
 
     void Entity::destroyed() {
-        Game *game = Game::instance();
-        if (game != nullptr) {
-            game->removeEntity(this);
-        } else {
-            std::fprintf(stderr, "Could not remove entity. No game found.\n");
-        }
     }
 
 }

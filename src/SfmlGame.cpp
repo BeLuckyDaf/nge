@@ -1,5 +1,8 @@
+#include <memory>
+
 #include <SFML/Graphics.hpp>
 #include <sstream>
+#include <memory>
 
 #include "Game.h"
 #include "Crosshair.h"
@@ -7,19 +10,19 @@
 using namespace nge;
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Norfoe Game Engine");
+    auto window = std::make_shared<sf::RenderWindow>(sf::VideoMode(800, 600), "Norfoe Game Engine");
     sf::Clock deltaClock;
 
-    //window.setFramerateLimit(30);
+    window->setFramerateLimit(60);
     //window.setVerticalSyncEnabled(true);
 
-    Game game(&window);
-    Crosshair crosshair("Assets/crosshair.png");
+    Game game(window);
+    auto crosshair = std::make_shared<Crosshair>("Assets/crosshair.png");
+    auto font = std::make_shared<sf::Font>();
 
-    sf::Font *font = new sf::Font;
     font->loadFromFile("Assets/Ubuntu-R.ttf");
-    sf::Text text("", *font);
-    text.setFillColor(sf::Color::White);
+    auto fpsLabel = std::make_shared<sf::Text>("", *font);
+    fpsLabel->setFillColor(sf::Color::White);
 
     /* ==== INIT ==== */
 
@@ -28,35 +31,32 @@ int main() {
         entity->init();
     }
 
-    int fpsCounter = 0;
-    float deltaFpsSeconds = 0;
-    float fps = 1;
 
-    while (window.isOpen()) {
+    float fpsTimer = 0;
+    int fpsCount = 0;
+    while (window->isOpen()) {
         sf::Time dt = deltaClock.restart();
 
-        // Showing framerate
-        if (fpsCounter < fps/10) {
-            fpsCounter++;
-            deltaFpsSeconds += dt.asSeconds();
+        if (fpsTimer < 1) {
+            fpsTimer += dt.asSeconds();
+            fpsCount++;
         }
         else {
             std::ostringstream oss;
-            fps = (fpsCounter)/deltaFpsSeconds;
-            oss << "FPS: " << fps;
-            text.setString(oss.str());
-            fpsCounter = 0;
-            deltaFpsSeconds = 0;
+            oss << "FPS: " << fpsCount;
+            fpsLabel->setString(oss.str());
+            fpsCount = 0;
+            fpsTimer = 0;
         }
 
         /* ==== EVENTS AND INPUT ==== */
 
-        sf::Event event;
-        while (window.pollEvent(event)) {
+        sf::Event event{};
+        while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed)
-                window.close();
+                window->close();
             if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::Escape) window.close();
+                if (event.key.code == sf::Keyboard::Escape) window->close();
             }
         }
 
@@ -67,7 +67,7 @@ int main() {
             entity->update(dt);
         }
 
-        window.clear();
+        window->clear();
 
         /* ==== DRAWING ==== */
 
@@ -75,13 +75,13 @@ int main() {
         for (auto entity : *game.getEntities()) {
             auto drawables = entity->draw();
             for (auto drawable : drawables) {
-                window.draw(*drawable);
+                window->draw(*drawable);
             }
         }
 
-        window.draw(text);
+        window->draw(*fpsLabel);
 
-        window.display();
+        window->display();
     }
 
     /* ==== DESTROYING ==== */
