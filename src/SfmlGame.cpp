@@ -16,7 +16,7 @@ int main() {
     window->setFramerateLimit(60);
     //window.setVerticalSyncEnabled(true);
 
-    Game game(window);
+    auto game = std::make_shared<Game>(window);
     auto crosshair = std::make_shared<Crosshair>("Assets/crosshair.png");
     auto font = std::make_shared<sf::Font>();
 
@@ -27,7 +27,7 @@ int main() {
     /* ==== INIT ==== */
 
     // Call init for each entity
-    for (auto entity : *game.getEntities()) {
+    for (auto entity : *game->getEntities()) {
         entity->init();
     }
 
@@ -63,7 +63,7 @@ int main() {
         /* ==== UPDATE ==== */
 
         // Call update for each entity
-        for (auto entity : *game.getEntities()) {
+        for (auto entity : *game->getEntities()) {
             entity->update(dt);
         }
 
@@ -72,7 +72,7 @@ int main() {
         /* ==== DRAWING ==== */
 
         // Call draw for each entity
-        for (auto entity : *game.getEntities()) {
+        for (auto entity : *game->getEntities()) {
             auto drawables = entity->draw();
             for (auto drawable : drawables) {
                 window->draw(*drawable);
@@ -87,7 +87,7 @@ int main() {
     /* ==== DESTROYING ==== */
 
     // Call destroyed for each entity
-    for (auto entity : *game.getEntities()) {
+    for (auto entity : *game->getEntities()) {
         entity->destroyed();
     }
 
